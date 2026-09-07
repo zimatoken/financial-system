@@ -1,0 +1,19 @@
+# Директории зависимостей
+node_modules/
+
+# Сборка
+dist/
+build/
+
+# Логи и временные файлы
+*.log
+.DS_Store
+*.tmp
+
+# Файлы IDE
+.vscode/
+.idea/
+
+# Файлы окружения
+.env
+.env.local
