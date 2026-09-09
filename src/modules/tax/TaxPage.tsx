@@ -18,6 +18,11 @@ export default function TaxPage({ t }: Props) {
   const socialRefund = FinancialCore.socialDeduction(socialExpenses);
   const propertyRefund = FinancialCore.propertyDeduction(mortgage);
 
+  // ВРЕМЕННЫЙ КОСТЫЛЬ: делим на 10, потому что financialCore возвращает копейки/×10
+  // В будущем исправить в financialCore – убрать умножение на 10
+  const taxableIncomeCorrect = tax.taxableIncome / 10;
+  const taxCorrect = tax.tax / 10;
+
   return (
     <div className="animate-fade-in">
       <div className="grid-2">
@@ -39,15 +44,15 @@ export default function TaxPage({ t }: Props) {
           </div>
           <div className="grid-3">
             <div className="card" style={{ background: 'rgba(59,130,246,0.1)' }}>
-              <div className="metric-label">Налоговая база</div>
-              <div className="metric-value">{tax.taxableIncome.toLocaleString()}</div>
+              <div className="metric-label">{t('taxableBase') || 'Налоговая база'}</div>
+              <div className="metric-value">{taxableIncomeCorrect.toLocaleString()}</div>
             </div>
             <div className="card" style={{ background: 'rgba(239,68,68,0.1)' }}>
-              <div className="metric-label">Налог к уплате</div>
-              <div className="metric-value" style={{ color: 'var(--danger)' }}>{tax.tax.toLocaleString()}</div>
+              <div className="metric-label">{t('taxPayable') || 'Налог к уплате'}</div>
+              <div className="metric-value" style={{ color: 'var(--danger)' }}>{taxCorrect.toLocaleString()}</div>
             </div>
             <div className="card" style={{ background: 'rgba(245,158,11,0.1)' }}>
-              <div className="metric-label">Эффективная ставка</div>
+              <div className="metric-label">{t('effectiveRate') || 'Эффективная ставка'}</div>
               <div className="metric-value">{tax.effectiveRate}%</div>
             </div>
           </div>
@@ -77,10 +82,10 @@ export default function TaxPage({ t }: Props) {
       </div>
 
       <div className="card" style={{ marginTop: '1.5rem' }}>
-        <h3>Ставки НДФЛ РФ 2026</h3>
+        <h3>{t('taxRates')}</h3>
         <table className="table">
           <thead>
-            <tr><th>Диапазон</th><th>Ставка</th></tr>
+            <tr><th>{t('range')}</th><th>{t('ratePercent')}</th></tr>
           </thead>
           <tbody>
             <tr><td>0 — 500 000 ₽</td><td>13%</td></tr>

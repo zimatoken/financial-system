@@ -15,6 +15,7 @@
   --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
   --radius: 12px;
   --transition: 0.2s ease;
+  --sidebar-width: 220px;    /* добавил для расчётов */
 }
 
 [data-theme="light"] {
@@ -48,6 +49,7 @@ body {
   flex-direction: column;
 }
 
+/* ===== КАРТОЧКИ И КОМПОНЕНТЫ ===== */
 .card {
   background: var(--card-bg);
   border: 1px solid var(--border);
@@ -63,6 +65,7 @@ body {
   font-size: 1.1rem;
 }
 
+/* ===== КНОПКИ ===== */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -101,6 +104,7 @@ body {
   background: var(--danger);
 }
 
+/* ===== ПОЛЯ ВВОДА ===== */
 .input {
   width: 100%;
   padding: 0.6rem 0.9rem;
@@ -125,6 +129,7 @@ body {
   padding-right: 2.2rem;
 }
 
+/* ===== СЕТКИ ===== */
 .grid-2 {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -151,6 +156,7 @@ body {
   .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
 }
 
+/* ===== МЕТРИКИ ===== */
 .metric-value {
   font-size: 1.75rem;
   font-weight: 700;
@@ -215,6 +221,7 @@ body {
   background: rgba(59, 130, 246, 0.05);
 }
 
+/* ===== КАСТОМНЫЙ СКРОЛЛ ===== */
 .scrollbar::-webkit-scrollbar {
   width: 6px;
 }
@@ -228,6 +235,7 @@ body {
   border-radius: 3px;
 }
 
+/* ===== АНИМАЦИИ ===== */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
@@ -235,4 +243,31 @@ body {
 
 .animate-fade-in {
   animation: fadeIn 0.3s ease forwards;
+}
+
+/* ===== 🔥 НОВЫЕ ПРАВКИ ДЛЯ СТРАНИЦЫ ДОЛГОВ ===== */
+/* Убираем лишний отступ сверху у основного контента */
+.main-content {
+  padding-top: 8px;          /* раньше могло быть 16px или больше */
+}
+
+/* Даём пространство для кнопки закрытия в сайдбаре */
+.sidebar-header {
+  padding-right: 32px;       /* чтобы заголовок не перекрывал крестик */
+}
+
+/* Если используется h1 на странице – уменьшаем отступ */
+.page-title {
+  margin-top: 0;
+  padding-top: 4px;
+}
+
+/* Для мобильных – ещё меньше отступов */
+@media (max-width: 768px) {
+  .main-content {
+    padding-top: 4px;
+  }
+  .sidebar-header {
+    padding-right: 24px;
+  }
 }
