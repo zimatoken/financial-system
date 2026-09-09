@@ -197,7 +197,8 @@ export default function App() {
             <Route path="/dashboard" element={<Dashboard store={store} t={t} />} />
             <Route path="/budget" element={<BudgetPage store={store} t={t} />} />
             <Route path="/invest" element={<InvestPage t={t} />} />
-            <Route path="/debt" element={<DebtPage t={t} />} />
+            {/* ✅ ИСПРАВЛЕНО: добавил lang={lang} */}
+            <Route path="/debt" element={<DebtPage t={t} lang={lang} />} />
             <Route path="/tax" element={<TaxPage t={t} />} />
             <Route path="/insurance" element={<InsurancePage store={store} t={t} />} />
             <Route path="/legacy" element={<LegacyPage t={t} />} />
