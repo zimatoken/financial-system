@@ -170,7 +170,10 @@ export class P2PManager {
       if (data instanceof Blob) {
         this.dc.send(data);
       } else if (data instanceof Uint8Array) {
-        this.dc.send(data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength));
+        // Копируем в новый ArrayBuffer, чтобы убрать возможный SharedArrayBuffer
+        const copy = new Uint8Array(data.byteLength);
+        copy.set(data);
+        this.dc.send(copy.buffer);
       } else {
         this.dc.send(data);
       }
@@ -187,9 +190,16 @@ export class P2PManager {
     if (typeof data === 'object' && data !== null && '__binary' in data) {
       const bin = (data as { __binary: ArrayBuffer | Uint8Array | Blob }).__binary;
       try {
-        if (bin instanceof Blob) this.dc.send(bin);
-        else if (bin instanceof Uint8Array) this.dc.send(bin.buffer);
-        else this.dc.send(bin);
+        if (bin instanceof Blob) {
+          this.dc.send(bin);
+        } else if (bin instanceof Uint8Array) {
+          // Копируем, чтобы гарантировать ArrayBuffer (не SharedArrayBuffer)
+          const copy = new Uint8Array(bin.byteLength);
+          copy.set(bin);
+          this.dc.send(copy.buffer);
+        } else {
+          this.dc.send(bin);
+        }
       } catch (e) {
         this.emitError(new Error(`Ошибка отправки бинарных данных: ${(e as Error).message}`));
       }
