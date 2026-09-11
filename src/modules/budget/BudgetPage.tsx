@@ -29,6 +29,8 @@ export default function BudgetPage({ store, t }: Props) {
   const totalDebts = debts.reduce((s, d) => s + d.balance, 0);
   const budget = FinancialCore.createBudget(totalIncome, totalExpenses, 0);
 
+  const fmt = (n: number) => n.toLocaleString('ru-RU');
+
   const saveSnapshot = () => {
     store.addSnapshot({
       incomes: [...incomes],
@@ -46,103 +48,187 @@ export default function BudgetPage({ store, t }: Props) {
 
   return (
     <div className="animate-fade-in">
+      {/* Метрики */}
       <div className="grid-4" style={{ marginBottom: '1.5rem' }}>
         <div className="card" style={{ borderLeft: '4px solid var(--success)' }}>
           <div className="metric-label">{t('income')}</div>
-          <div className="metric-value" style={{ color: 'var(--success)' }}>{totalIncome.toLocaleString()}</div>
+          <div className="metric-value" style={{ color: 'var(--success)' }}>{fmt(totalIncome)}</div>
         </div>
         <div className="card" style={{ borderLeft: '4px solid var(--danger)' }}>
           <div className="metric-label">{t('expenses')}</div>
-          <div className="metric-value" style={{ color: 'var(--danger)' }}>{totalExpenses.toLocaleString()}</div>
+          <div className="metric-value" style={{ color: 'var(--danger)' }}>{fmt(totalExpenses)}</div>
         </div>
         <div className="card" style={{ borderLeft: '4px solid var(--primary)' }}>
           <div className="metric-label">{t('assets')}</div>
-          <div className="metric-value">{totalAssets.toLocaleString()}</div>
+          <div className="metric-value">{fmt(totalAssets)}</div>
         </div>
         <div className="card" style={{ borderLeft: '4px solid var(--warning)' }}>
           <div className="metric-label">{t('liabilities')}</div>
-          <div className="metric-value">{totalDebts.toLocaleString()}</div>
+          <div className="metric-value">{fmt(totalDebts)}</div>
         </div>
       </div>
 
       <div className="grid-2">
+        {/* ДОХОДЫ */}
         <div className="card">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
             <h3>{t('income')}</h3>
-            <button className="btn" onClick={addIncome}><Plus size={16} /></button>
+            <button className="btn" onClick={addIncome} aria-label={t('add')}><Plus size={16} /></button>
           </div>
           {incomes.map((inc, i) => (
-            <div key={inc.id} style={{ display: 'flex', gap: 8, marginBottom: 8, alignItems: 'center' }}>
-              <input className="input" style={{ flex: 2 }} value={inc.name} onChange={e => { const arr = [...incomes]; arr[i].name = e.target.value; setIncomes(arr); }} placeholder="Название" />
-              <input className="input" style={{ flex: 1 }} type="number" value={inc.amount} onChange={e => { const arr = [...incomes]; arr[i].amount = +e.target.value; setIncomes(arr); }} />
-              <select className="input select" style={{ flex: 1 }} value={inc.type} onChange={e => { const arr = [...incomes]; arr[i].type = e.target.value as any; setIncomes(arr); }}>
-                <option value="active">Активный</option>
-                <option value="passive">Пассивный</option>
+            <div key={inc.id} className="budget-row">
+              <input
+                className="input"
+                value={inc.name}
+                onChange={e => { const arr = [...incomes]; arr[i].name = e.target.value; setIncomes(arr); }}
+                placeholder={t('incomeName')}
+                title={t('incomeName')}
+              />
+              <input
+                className="input"
+                type="number" min="0"
+                value={inc.amount || ''}
+                onChange={e => { const arr = [...incomes]; arr[i].amount = Math.max(0, +e.target.value); setIncomes(arr); }}
+                placeholder={t('amount')}
+                title={t('amount')}
+              />
+              <select
+                className="input select"
+                value={inc.type}
+                onChange={e => { const arr = [...incomes]; arr[i].type = e.target.value as any; setIncomes(arr); }}
+                title={t('incomeType')}
+              >
+                <option value="active">{t('activeIncome')}</option>
+                <option value="passive">{t('passiveIncomeType')}</option>
               </select>
-              <button className="btn btn-danger" onClick={() => setIncomes(incomes.filter((_, idx) => idx !== i))}><Trash2 size={14} /></button>
+              <button className="btn btn-danger" onClick={() => setIncomes(incomes.filter((_, idx) => idx !== i))} aria-label={t('delete')}><Trash2 size={14} /></button>
             </div>
           ))}
         </div>
 
+        {/* РАСХОДЫ */}
         <div className="card">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
             <h3>{t('expenses')}</h3>
-            <button className="btn" onClick={addExpense}><Plus size={16} /></button>
+            <button className="btn" onClick={addExpense} aria-label={t('add')}><Plus size={16} /></button>
           </div>
           {expenses.map((exp, i) => (
-            <div key={exp.id} style={{ display: 'flex', gap: 8, marginBottom: 8, alignItems: 'center' }}>
-              <input className="input" style={{ flex: 2 }} value={exp.name} onChange={e => { const arr = [...expenses]; arr[i].name = e.target.value; setExpenses(arr); }} placeholder="Название" />
-              <input className="input" style={{ flex: 1 }} type="number" value={exp.amount} onChange={e => { const arr = [...expenses]; arr[i].amount = +e.target.value; setExpenses(arr); }} />
-              <select className="input select" style={{ flex: 1 }} value={exp.category} onChange={e => { const arr = [...expenses]; arr[i].category = e.target.value as any; setExpenses(arr); }}>
-                <option value="mandatory">Обязательные</option>
-                <option value="discretionary">Желания</option>
-                <option value="investment">Инвестиции</option>
+            <div key={exp.id} className="budget-row">
+              <input
+                className="input"
+                value={exp.name}
+                onChange={e => { const arr = [...expenses]; arr[i].name = e.target.value; setExpenses(arr); }}
+                placeholder={t('expenseName')}
+                title={t('expenseName')}
+              />
+              <input
+                className="input"
+                type="number" min="0"
+                value={exp.amount || ''}
+                onChange={e => { const arr = [...expenses]; arr[i].amount = Math.max(0, +e.target.value); setExpenses(arr); }}
+                placeholder={t('amount')}
+                title={t('amount')}
+              />
+              <select
+                className="input select"
+                value={exp.category}
+                onChange={e => { const arr = [...expenses]; arr[i].category = e.target.value as any; setExpenses(arr); }}
+                title={t('expenseCategory')}
+              >
+                <option value="mandatory">{t('mandatory')}</option>
+                <option value="discretionary">{t('discretionary')}</option>
+                <option value="investment">{t('invest')}</option>
               </select>
-              <button className="btn btn-danger" onClick={() => setExpenses(expenses.filter((_, idx) => idx !== i))}><Trash2 size={14} /></button>
+              <button className="btn btn-danger" onClick={() => setExpenses(expenses.filter((_, idx) => idx !== i))} aria-label={t('delete')}><Trash2 size={14} /></button>
             </div>
           ))}
         </div>
 
+        {/* АКТИВЫ */}
         <div className="card">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
             <h3>{t('assets')}</h3>
-            <button className="btn" onClick={addAsset}><Plus size={16} /></button>
+            <button className="btn" onClick={addAsset} aria-label={t('add')}><Plus size={16} /></button>
           </div>
           {assets.map((ast, i) => (
-            <div key={ast.id} style={{ display: 'flex', gap: 8, marginBottom: 8, alignItems: 'center' }}>
-              <input className="input" style={{ flex: 2 }} value={ast.name} onChange={e => { const arr = [...assets]; arr[i].name = e.target.value; setAssets(arr); }} placeholder="Название" />
-              <input className="input" style={{ flex: 1 }} type="number" value={ast.value} onChange={e => { const arr = [...assets]; arr[i].value = +e.target.value; setAssets(arr); }} />
-              <input className="input" style={{ flex: 1 }} type="number" value={ast.expectedReturn} onChange={e => { const arr = [...assets]; arr[i].expectedReturn = +e.target.value; setAssets(arr); }} placeholder="Доход %" />
-              <button className="btn btn-danger" onClick={() => setAssets(assets.filter((_, idx) => idx !== i))}><Trash2 size={14} /></button>
+            <div key={ast.id} className="budget-row">
+              <input
+                className="input"
+                value={ast.name}
+                onChange={e => { const arr = [...assets]; arr[i].name = e.target.value; setAssets(arr); }}
+                placeholder={t('assetName')}
+                title={t('assetName')}
+              />
+              <input
+                className="input"
+                type="number" min="0"
+                value={ast.value || ''}
+                onChange={e => { const arr = [...assets]; arr[i].value = Math.max(0, +e.target.value); setAssets(arr); }}
+                placeholder={t('assetValue')}
+                title={t('assetValue')}
+              />
+              <input
+                className="input"
+                type="number" min="0" max="100"
+                value={ast.expectedReturn || ''}
+                onChange={e => { const arr = [...assets]; arr[i].expectedReturn = Math.min(100, Math.max(0, +e.target.value)); setAssets(arr); }}
+                placeholder={t('yieldPercent')}
+                title={t('yieldTooltip')}
+              />
+              <button className="btn btn-danger" onClick={() => setAssets(assets.filter((_, idx) => idx !== i))} aria-label={t('delete')}><Trash2 size={14} /></button>
             </div>
           ))}
         </div>
 
+        {/* ПАССИВЫ */}
         <div className="card">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
             <h3>{t('liabilities')}</h3>
-            <button className="btn" onClick={addDebt}><Plus size={16} /></button>
+            <button className="btn" onClick={addDebt} aria-label={t('add')}><Plus size={16} /></button>
           </div>
           {debts.map((debt, i) => (
-            <div key={debt.id} style={{ display: 'flex', gap: 8, marginBottom: 8, alignItems: 'center' }}>
-              <input className="input" style={{ flex: 2 }} value={debt.name} onChange={e => { const arr = [...debts]; arr[i].name = e.target.value; setDebts(arr); }} placeholder="Название" />
-              <input className="input" style={{ flex: 1 }} type="number" value={debt.balance} onChange={e => { const arr = [...debts]; arr[i].balance = +e.target.value; setDebts(arr); }} />
-              <input className="input" style={{ flex: 1 }} type="number" value={debt.interestRate} onChange={e => { const arr = [...debts]; arr[i].interestRate = +e.target.value; setDebts(arr); }} placeholder="Ставка %" />
-              <button className="btn btn-danger" onClick={() => setDebts(debts.filter((_, idx) => idx !== i))}><Trash2 size={14} /></button>
+            <div key={debt.id} className="budget-row">
+              <input
+                className="input"
+                value={debt.name}
+                onChange={e => { const arr = [...debts]; arr[i].name = e.target.value; setDebts(arr); }}
+                placeholder={t('liabilityName')}
+                title={t('liabilityName')}
+              />
+              <input
+                className="input"
+                type="number" min="0"
+                value={debt.balance || ''}
+                onChange={e => { const arr = [...debts]; arr[i].balance = Math.max(0, +e.target.value); setDebts(arr); }}
+                placeholder={t('liabilityValue')}
+                title={t('liabilityValue')}
+              />
+              <input
+                className="input"
+                type="number" min="0" max="100"
+                value={debt.interestRate || ''}
+                onChange={e => { const arr = [...debts]; arr[i].interestRate = Math.min(100, Math.max(0, +e.target.value)); setDebts(arr); }}
+                placeholder={t('ratePercent')}
+                title={t('rateTooltip')}
+              />
+              <button className="btn btn-danger" onClick={() => setDebts(debts.filter((_, idx) => idx !== i))} aria-label={t('delete')}><Trash2 size={14} /></button>
             </div>
           ))}
         </div>
       </div>
 
+      {/* Норма сбережений + Сохранить */}
       <div className="card" style={{ marginTop: '1.5rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
           <div>
-            <div className="metric-label">Бюджет: {t('savingsRate')}</div>
+            <div className="metric-label">{t('budget')}: {t('savingsRate')}</div>
             <div className="metric-value" style={{ color: budget.savingsRate > 0.2 ? 'var(--success)' : 'var(--warning)' }}>
               {Math.round(budget.savingsRate * 100)}%
             </div>
           </div>
-          <button className="btn btn-success" onClick={saveSnapshot}><Save size={16} /> Сохранить снимок</button>
+          <button className="btn btn-success" onClick={saveSnapshot}>
+            <Save size={16} /> {t('saveSnapshot')}
+          </button>
         </div>
       </div>
     </div>

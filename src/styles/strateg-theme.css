@@ -15,7 +15,7 @@
   --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
   --radius: 12px;
   --transition: 0.2s ease;
-  --sidebar-width: 220px;    /* добавил для расчётов */
+  --sidebar-width: 220px;
 }
 
 [data-theme="light"] {
@@ -114,6 +114,7 @@ body {
   color: var(--text);
   font-size: 0.95rem;
   transition: border-color var(--transition);
+  min-width: 0;             /* важно! иначе flex не даёт сжиматься */
 }
 
 .input:focus {
@@ -245,29 +246,80 @@ body {
   animation: fadeIn 0.3s ease forwards;
 }
 
-/* ===== 🔥 НОВЫЕ ПРАВКИ ДЛЯ СТРАНИЦЫ ДОЛГОВ ===== */
-/* Убираем лишний отступ сверху у основного контента */
+/* ===== ПРАВКИ ДЛЯ СТРАНИЦЫ ДОЛГОВ ===== */
 .main-content {
-  padding-top: 8px;          /* раньше могло быть 16px или больше */
+  padding-top: 8px;
 }
 
-/* Даём пространство для кнопки закрытия в сайдбаре */
 .sidebar-header {
-  padding-right: 32px;       /* чтобы заголовок не перекрывал крестик */
+  padding-right: 32px;
 }
 
-/* Если используется h1 на странице – уменьшаем отступ */
 .page-title {
   margin-top: 0;
   padding-top: 4px;
 }
 
-/* Для мобильных – ещё меньше отступов */
+/* ===== 🔥 БЮДЖЕТ: СТРОКИ ВВОДА (Адаптивность для мобильных) ===== */
+.budget-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+  align-items: center;
+  flex-wrap: wrap;              /* разрешаем перенос */
+}
+
+/* Первое поле (Название) — растягивается */
+.budget-row > input:first-child,
+.budget-row > .input:first-child {
+  flex: 2 1 200px;
+  min-width: 0;
+}
+
+/* Числовые поля и селект — гибкие */
+.budget-row > input[type="number"],
+.budget-row > select {
+  flex: 1 1 120px;
+  min-width: 0;
+}
+
+/* Кнопка удаления не сжимается */
+.budget-row > button {
+  flex: 0 0 auto;
+}
+
+/* На мобильных — раскладка в 2 строки */
 @media (max-width: 768px) {
   .main-content {
     padding-top: 4px;
   }
   .sidebar-header {
     padding-right: 24px;
+  }
+  
+  .budget-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;   /* Название | Сумма | Кнопка */
+    gap: 6px;
+  }
+  
+  /* Название — на всю ширину */
+  .budget-row > input:first-child {
+    grid-column: 1 / -1;                    /* занять всю строку */
+    flex: 1 1 auto;
+  }
+  
+  /* Сумма и Ставка/Тип — в одну линию */
+  .budget-row > input[type="number"],
+  .budget-row > select {
+    flex: 1 1 0;
+    min-width: 0;
+    font-size: 14px;                        /* чтобы влезли цифры */
+    padding: 0.5rem 0.6rem;
+  }
+  
+  /* Кнопка удаления — компактная */
+  .budget-row > button {
+    padding: 0.5rem;
   }
 }

@@ -169,16 +169,15 @@ export const FinancialCore = {
   // ===== ПРАВИЛО 100 - ВОЗРАСТ =====
   ageBasedAllocation(age: number): InvestmentPortfolio {
     const stocks = Math.max(0, Math.min(100, 100 - age));
-    const bonds = Math.max(0, age);
-    const remaining = 100 - stocks - bonds;
+    const nonStocks = 100 - stocks; // = age
     return {
       stocks,
-      bonds,
-      realEstate: Math.round(remaining * 0.4),
-      gold: Math.round(remaining * 0.2),
-      crypto: Math.round(remaining * 0.2),
-      deposits: Math.round(remaining * 0.1),
-      cash: Math.round(remaining * 0.1),
+      bonds: Math.round(nonStocks * 0.5),
+      realEstate: Math.round(nonStocks * 0.2),
+      gold: Math.round(nonStocks * 0.1),
+      crypto: Math.round(nonStocks * 0.05),
+      deposits: Math.round(nonStocks * 0.1),
+      cash: Math.round(nonStocks * 0.05),
     };
   },
 
