@@ -288,6 +288,173 @@ body {
   flex: 0 0 auto;
 }
 
+/* ============================================================
+   📱 МОБИЛЬНЫЕ ФИКСЫ + ВИЗУАЛЬНЫЙ КОМФОРТ v2.0 — 12.09.2026
+   ============================================================ */
+
+/* ── ФИКС 1: Шапка сайдбара ─────────────────────────────── */
+.sidebar-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 1rem 44px 1rem 1rem;
+  border-bottom: 1px solid var(--border);
+  flex: none;
+}
+
+.sidebar-logo {
+  font-size: 24px;
+  line-height: 1;
+  flex: none;
+}
+
+.sidebar-titles {
+  overflow: hidden;
+  min-width: 0;
+  flex: 1;
+}
+
+.sidebar-title {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--heading);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar-subtitle {
+  font-size: 11px;
+  color: var(--subtext);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 2px;
+}
+
+.sidebar-close {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  color: var(--subtext);
+  cursor: pointer;
+  flex: none;
+}
+
+.sidebar-close:hover {
+  background: var(--border);
+  color: var(--text);
+}
+
+/* ── ФИКС 2: Строки бюджета ─────────────────────────────── */
+.budget-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 4px;
+  border-bottom: 1px dashed var(--border);
+  border-radius: 4px;
+}
+
+.budget-row:last-child {
+  border-bottom: none;
+}
+
+.budget-row:hover {
+  background: rgba(128, 128, 128, 0.08);
+}
+
+.budget-row > * {
+  min-width: 0;
+}
+
+.budget-row .input-name {
+  flex: 1 1 auto;
+  font-size: 13px;
+  padding: 8px 10px;
+}
+
+.budget-row .input-amount {
+  flex: 0 0 88px;
+  font-size: 13px;
+  padding: 8px;
+  text-align: right;
+}
+
+.budget-row .input-num {
+  flex: 0 0 62px;
+  font-size: 13px;
+  padding: 8px 6px;
+  text-align: right;
+}
+
+.budget-row .select-currency {
+  flex: 0 0 92px;
+  font-size: 12px;
+  padding: 8px 6px;
+}
+
+.budget-row .btn-icon {
+  flex: 0 0 auto;
+  padding: 8px 10px;
+}
+
+.budget-row input[type='number']::-webkit-outer-spin-button,
+.budget-row input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.budget-row input[type='number'] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* ── Мобильная адаптация ≤480px ─────────────────────────── */
+@media (max-width: 480px) {
+  .sidebar-title {
+    font-size: 14px;
+  }
+
+  .budget-row {
+    gap: 6px;
+    padding: 6px 2px;
+  }
+
+  .budget-row .input-name {
+    font-size: 12px;
+    padding: 8px;
+  }
+
+  .budget-row .input-amount {
+    flex-basis: 72px;
+    font-size: 12px;
+  }
+
+  .budget-row .input-num {
+    flex-basis: 54px;
+    font-size: 12px;
+  }
+
+  .budget-row .select-currency {
+    flex-basis: 78px;
+    font-size: 11px;
+  }
+
+  .budget-row .btn-icon {
+    padding: 8px;
+  }
+}
+
 /* На мобильных — раскладка в 2 строки */
 @media (max-width: 768px) {
   .main-content {

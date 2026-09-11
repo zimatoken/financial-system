@@ -78,14 +78,14 @@ export default function BudgetPage({ store, t }: Props) {
           {incomes.map((inc, i) => (
             <div key={inc.id} className="budget-row">
               <input
-                className="input"
+                className="input input-name"
                 value={inc.name}
                 onChange={e => { const arr = [...incomes]; arr[i].name = e.target.value; setIncomes(arr); }}
                 placeholder={t('incomeName')}
-                title={t('incomeName')}
+                title={inc.name || t('incomeName')}
               />
               <input
-                className="input"
+                className="input input-amount"
                 type="number" min="0"
                 value={inc.amount || ''}
                 onChange={e => { const arr = [...incomes]; arr[i].amount = Math.max(0, +e.target.value); setIncomes(arr); }}
@@ -93,7 +93,7 @@ export default function BudgetPage({ store, t }: Props) {
                 title={t('amount')}
               />
               <select
-                className="input select"
+                className="input select-currency"
                 value={inc.type}
                 onChange={e => { const arr = [...incomes]; arr[i].type = e.target.value as any; setIncomes(arr); }}
                 title={t('incomeType')}
@@ -101,7 +101,7 @@ export default function BudgetPage({ store, t }: Props) {
                 <option value="active">{t('activeIncome')}</option>
                 <option value="passive">{t('passiveIncomeType')}</option>
               </select>
-              <button className="btn btn-danger" onClick={() => setIncomes(incomes.filter((_, idx) => idx !== i))} aria-label={t('delete')}><Trash2 size={14} /></button>
+              <button className="btn btn-danger btn-icon" onClick={() => setIncomes(incomes.filter((_, idx) => idx !== i))} aria-label={t('delete')}><Trash2 size={14} /></button>
             </div>
           ))}
         </div>
@@ -115,14 +115,14 @@ export default function BudgetPage({ store, t }: Props) {
           {expenses.map((exp, i) => (
             <div key={exp.id} className="budget-row">
               <input
-                className="input"
+                className="input input-name"
                 value={exp.name}
                 onChange={e => { const arr = [...expenses]; arr[i].name = e.target.value; setExpenses(arr); }}
                 placeholder={t('expenseName')}
-                title={t('expenseName')}
+                title={exp.name || t('expenseName')}
               />
               <input
-                className="input"
+                className="input input-amount"
                 type="number" min="0"
                 value={exp.amount || ''}
                 onChange={e => { const arr = [...expenses]; arr[i].amount = Math.max(0, +e.target.value); setExpenses(arr); }}
@@ -130,7 +130,7 @@ export default function BudgetPage({ store, t }: Props) {
                 title={t('amount')}
               />
               <select
-                className="input select"
+                className="input select-currency"
                 value={exp.category}
                 onChange={e => { const arr = [...expenses]; arr[i].category = e.target.value as any; setExpenses(arr); }}
                 title={t('expenseCategory')}
@@ -139,7 +139,7 @@ export default function BudgetPage({ store, t }: Props) {
                 <option value="discretionary">{t('discretionary')}</option>
                 <option value="investment">{t('invest')}</option>
               </select>
-              <button className="btn btn-danger" onClick={() => setExpenses(expenses.filter((_, idx) => idx !== i))} aria-label={t('delete')}><Trash2 size={14} /></button>
+              <button className="btn btn-danger btn-icon" onClick={() => setExpenses(expenses.filter((_, idx) => idx !== i))} aria-label={t('delete')}><Trash2 size={14} /></button>
             </div>
           ))}
         </div>
@@ -153,14 +153,14 @@ export default function BudgetPage({ store, t }: Props) {
           {assets.map((ast, i) => (
             <div key={ast.id} className="budget-row">
               <input
-                className="input"
+                className="input input-name"
                 value={ast.name}
                 onChange={e => { const arr = [...assets]; arr[i].name = e.target.value; setAssets(arr); }}
                 placeholder={t('assetName')}
-                title={t('assetName')}
+                title={ast.name || t('assetName')}
               />
               <input
-                className="input"
+                className="input input-amount"
                 type="number" min="0"
                 value={ast.value || ''}
                 onChange={e => { const arr = [...assets]; arr[i].value = Math.max(0, +e.target.value); setAssets(arr); }}
@@ -168,14 +168,14 @@ export default function BudgetPage({ store, t }: Props) {
                 title={t('assetValue')}
               />
               <input
-                className="input"
+                className="input input-num"
                 type="number" min="0" max="100"
                 value={ast.expectedReturn || ''}
                 onChange={e => { const arr = [...assets]; arr[i].expectedReturn = Math.min(100, Math.max(0, +e.target.value)); setAssets(arr); }}
                 placeholder={t('yieldPercent')}
                 title={t('yieldTooltip')}
               />
-              <button className="btn btn-danger" onClick={() => setAssets(assets.filter((_, idx) => idx !== i))} aria-label={t('delete')}><Trash2 size={14} /></button>
+              <button className="btn btn-danger btn-icon" onClick={() => setAssets(assets.filter((_, idx) => idx !== i))} aria-label={t('delete')}><Trash2 size={14} /></button>
             </div>
           ))}
         </div>
@@ -189,14 +189,14 @@ export default function BudgetPage({ store, t }: Props) {
           {debts.map((debt, i) => (
             <div key={debt.id} className="budget-row">
               <input
-                className="input"
+                className="input input-name"
                 value={debt.name}
                 onChange={e => { const arr = [...debts]; arr[i].name = e.target.value; setDebts(arr); }}
                 placeholder={t('liabilityName')}
-                title={t('liabilityName')}
+                title={debt.name || t('liabilityName')}
               />
               <input
-                className="input"
+                className="input input-amount"
                 type="number" min="0"
                 value={debt.balance || ''}
                 onChange={e => { const arr = [...debts]; arr[i].balance = Math.max(0, +e.target.value); setDebts(arr); }}
@@ -204,14 +204,14 @@ export default function BudgetPage({ store, t }: Props) {
                 title={t('liabilityValue')}
               />
               <input
-                className="input"
+                className="input input-num"
                 type="number" min="0" max="100"
                 value={debt.interestRate || ''}
                 onChange={e => { const arr = [...debts]; arr[i].interestRate = Math.min(100, Math.max(0, +e.target.value)); setDebts(arr); }}
                 placeholder={t('ratePercent')}
                 title={t('rateTooltip')}
               />
-              <button className="btn btn-danger" onClick={() => setDebts(debts.filter((_, idx) => idx !== i))} aria-label={t('delete')}><Trash2 size={14} /></button>
+              <button className="btn btn-danger btn-icon" onClick={() => setDebts(debts.filter((_, idx) => idx !== i))} aria-label={t('delete')}><Trash2 size={14} /></button>
             </div>
           ))}
         </div>

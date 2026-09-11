@@ -81,17 +81,18 @@ export default function App() {
           overflowY: 'auto',
         }}
       >
-        <div style={{ padding: '1rem', display: 'flex', alignItems: 'center', gap: 12, borderBottom: '1px solid var(--border)' }}>
-          <div style={{ fontSize: 24 }}>🏛️</div>
+        <div className="sidebar-header">
+          <div className="sidebar-logo">🏛️</div>
           {sidebarOpen && (
-            <div style={{ overflow: 'hidden' }}>
-              <div style={{ fontWeight: 700, color: 'var(--heading)', whiteSpace: 'nowrap' }}>{t('appTitle')}</div>
-              <div style={{ fontSize: 11, color: 'var(--subtext)', whiteSpace: 'nowrap' }}>{t('appSubtitle')}</div>
+            <div className="sidebar-titles">
+              <div className="sidebar-title" title={t('appTitle')}>{t('appTitle')}</div>
+              <div className="sidebar-subtitle" title={t('appSubtitle')}>{t('appSubtitle')}</div>
             </div>
           )}
           <button
+            className="sidebar-close"
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            style={{ marginLeft: 'auto', background: 'none', border: 'none', color: 'var(--subtext)', cursor: 'pointer' }}
+            aria-label={sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
           >
             {sidebarOpen ? <X size={18} /> : <Menu size={18} />}
           </button>
