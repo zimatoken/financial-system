@@ -9,6 +9,67 @@ interface Props {
   t: (key: TranslationKey) => string;
 }
 
+/* ── Локальный компонент подсказки ⓘ ─────────────────────── */
+function Hint({ text }: { text: string }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <span
+      style={{ position: 'relative', display: 'inline-flex', flex: 'none' }}
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+      onClick={() => setOpen(o => !o)}
+    >
+      <span
+        style={{
+          cursor: 'help',
+          color: 'var(--subtext)',
+          fontSize: 12,
+          fontWeight: 700,
+          width: 18,
+          height: 18,
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          borderRadius: '50%',
+          border: '1px solid var(--border)',
+          userSelect: 'none',
+        }}
+        aria-label={text}
+      >
+        i
+      </span>
+      {open && (
+        <span
+          style={{
+            position: 'absolute',
+            bottom: '100%',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            marginBottom: 6,
+            background: 'var(--card-bg)',
+            color: 'var(--text)',
+            border: '1px solid var(--border)',
+            borderRadius: 8,
+            padding: '8px 12px',
+            fontSize: 12,
+            width: 220,
+            boxShadow: 'var(--shadow)',
+            zIndex: 50,
+            whiteSpace: 'normal',
+            lineHeight: 1.4,
+            pointerEvents: 'none',
+          }}
+          role="tooltip"
+        >
+          {text}
+        </span>
+      )}
+    </span>
+  );
+}
+
+/* ── Основной компонент ──────────────────────────────────── */
 export default function BudgetPage({ store, t }: Props) {
   const [incomes, setIncomes] = useState<IncomeStream[]>([
     { id: '1', name: 'Зарплата', type: 'active', amount: 150000, frequency: 'monthly', stability: 0.9, taxRate: 13 },
@@ -82,7 +143,7 @@ export default function BudgetPage({ store, t }: Props) {
                 value={inc.name}
                 onChange={e => { const arr = [...incomes]; arr[i].name = e.target.value; setIncomes(arr); }}
                 placeholder={t('incomeName')}
-                title={inc.name || t('incomeName')}
+                title={t('incomeName')}
               />
               <input
                 className="input input-amount"
@@ -119,7 +180,7 @@ export default function BudgetPage({ store, t }: Props) {
                 value={exp.name}
                 onChange={e => { const arr = [...expenses]; arr[i].name = e.target.value; setExpenses(arr); }}
                 placeholder={t('expenseName')}
-                title={exp.name || t('expenseName')}
+                title={t('expenseName')}
               />
               <input
                 className="input input-amount"
@@ -157,7 +218,7 @@ export default function BudgetPage({ store, t }: Props) {
                 value={ast.name}
                 onChange={e => { const arr = [...assets]; arr[i].name = e.target.value; setAssets(arr); }}
                 placeholder={t('assetName')}
-                title={ast.name || t('assetName')}
+                title={t('assetName')}
               />
               <input
                 className="input input-amount"
@@ -167,14 +228,17 @@ export default function BudgetPage({ store, t }: Props) {
                 placeholder={t('assetValue')}
                 title={t('assetValue')}
               />
-              <input
-                className="input input-num"
-                type="number" min="0" max="100"
-                value={ast.expectedReturn || ''}
-                onChange={e => { const arr = [...assets]; arr[i].expectedReturn = Math.min(100, Math.max(0, +e.target.value)); setAssets(arr); }}
-                placeholder={t('yieldPercent')}
-                title={t('yieldTooltip')}
-              />
+              <div style={{ display: 'flex', alignItems: 'center', gap: 4, flex: '0 0 auto' }}>
+                <input
+                  className="input input-num"
+                  type="number" min="0" max="100"
+                  value={ast.expectedReturn || ''}
+                  onChange={e => { const arr = [...assets]; arr[i].expectedReturn = Math.min(100, Math.max(0, +e.target.value)); setAssets(arr); }}
+                  placeholder="8"
+                  style={{ width: 62 }}
+                />
+                <Hint text={t('yieldTooltip')} />
+              </div>
               <button className="btn btn-danger btn-icon" onClick={() => setAssets(assets.filter((_, idx) => idx !== i))} aria-label={t('delete')}><Trash2 size={14} /></button>
             </div>
           ))}
@@ -193,7 +257,7 @@ export default function BudgetPage({ store, t }: Props) {
                 value={debt.name}
                 onChange={e => { const arr = [...debts]; arr[i].name = e.target.value; setDebts(arr); }}
                 placeholder={t('liabilityName')}
-                title={debt.name || t('liabilityName')}
+                title={t('liabilityName')}
               />
               <input
                 className="input input-amount"
@@ -203,14 +267,17 @@ export default function BudgetPage({ store, t }: Props) {
                 placeholder={t('liabilityValue')}
                 title={t('liabilityValue')}
               />
-              <input
-                className="input input-num"
-                type="number" min="0" max="100"
-                value={debt.interestRate || ''}
-                onChange={e => { const arr = [...debts]; arr[i].interestRate = Math.min(100, Math.max(0, +e.target.value)); setDebts(arr); }}
-                placeholder={t('ratePercent')}
-                title={t('rateTooltip')}
-              />
+              <div style={{ display: 'flex', alignItems: 'center', gap: 4, flex: '0 0 auto' }}>
+                <input
+                  className="input input-num"
+                  type="number" min="0" max="100"
+                  value={debt.interestRate || ''}
+                  onChange={e => { const arr = [...debts]; arr[i].interestRate = Math.min(100, Math.max(0, +e.target.value)); setDebts(arr); }}
+                  placeholder="10"
+                  style={{ width: 62 }}
+                />
+                <Hint text={t('rateTooltip')} />
+              </div>
               <button className="btn btn-danger btn-icon" onClick={() => setDebts(debts.filter((_, idx) => idx !== i))} aria-label={t('delete')}><Trash2 size={14} /></button>
             </div>
           ))}
