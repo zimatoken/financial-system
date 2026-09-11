@@ -115,6 +115,11 @@ export const translations = {
     payoffOrder: 'Порядок погашения',
     snowballHint: 'Закрываем сначала самые маленькие долги — быстрые победы поддерживают мотивацию.',
     avalancheHint: 'Гасим сначала самые дорогие по ставке долги — переплата минимальна.',
+    annualIncome: 'Годовой доход',
+    expensesDeduction: 'Расходы (вычет)',
+    investmentsDeduction: 'Инвестиции (вычет)',
+    socialExpensesHint: 'Расходы на образование/лечение',
+    mortgageHint: 'Ипотечные проценты (имущ. вычет)',
    },
   en: {
     appTitle: 'Financial System',
@@ -230,6 +235,11 @@ export const translations = {
     payoffOrder: 'Payoff order',
     snowballHint: 'Smallest debts first — quick wins keep you motivated.',
     avalancheHint: 'Highest-rate debts first — minimum overpayment.',
+    annualIncome: 'Annual income',
+    expensesDeduction: 'Expenses (deduction)',
+    investmentsDeduction: 'Investments (deduction)',
+    socialExpensesHint: 'Education / medical expenses',
+    mortgageHint: 'Mortgage interest (property deduction)',
   }
 } as const;
 

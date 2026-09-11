@@ -24,6 +24,23 @@ export default function MessengerPage({ store, t }: Props) {
         store.addMessage({ ...data.payload, status: 'delivered' });
       }
     });
+
+    p2p.onConnect(() => {
+      console.log('P2P: соединение установлено');
+    });
+
+    p2p.onDisconnect(() => {
+      console.log('P2P: соединение разорвано');
+    });
+
+    p2p.onError((err) => {
+      console.error('P2P:', err.message);
+    });
+
+    // Закрываем соединение при уходе со страницы
+    return () => {
+      p2p.close();
+    };
   }, []);
 
   useEffect(() => {
@@ -31,17 +48,27 @@ export default function MessengerPage({ store, t }: Props) {
   }, [store.data.messages]);
 
   const createOffer = async () => {
-    const sdp = await p2p.createOffer();
-    setMySdp(sdp);
+    try {
+      const sdp = await p2p.createOffer();
+      setMySdp(sdp);
+    } catch (e) {
+      alert((e as Error).message);
+    }
   };
 
   const connect = async () => {
     if (!sdpInput) return;
-    if (sdpInput.includes('answer')) {
-      await p2p.acceptAnswer(sdpInput);
-    } else {
-      const answer = await p2p.acceptOffer(sdpInput);
-      setMySdp(answer);
+    try {
+      // Парсим JSON вместо ненадёжного поиска подстроки
+      const parsed = JSON.parse(sdpInput);
+      if (parsed.type === 'answer') {
+        await p2p.acceptAnswer(sdpInput);
+      } else {
+        const answer = await p2p.acceptOffer(sdpInput);
+        setMySdp(answer);
+      }
+    } catch (e) {
+      alert((e as Error).message);
     }
   };
 
